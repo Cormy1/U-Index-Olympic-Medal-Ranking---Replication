@@ -17,7 +17,7 @@ rank_dp <- function(medalcounts,
   
   country_data%>% mutate(
     M = m, 
-    S = sum(total_pop_july),  #Total pop of medal winning countries: S
+    S = 7.229e9,  #Total pop of medal winning countries: S
     Tot.M = medals, 
     Exp.N = (total_pop_july/S)*Tot.M,
     p = (Exp.N / M)  
@@ -25,8 +25,9 @@ rank_dp <- function(medalcounts,
     mutate(prob = pbinom(Medals.total - 1, # observed corrected
                          size = M, #number of trials
                          p,   
-                         lower.tail = FALSE),
-           u_index = - log10(prob)) %>%
+                         lower.tail = FALSE, 
+                         log = TRUE),
+           u_index = -1*log10(exp(prob))) %>%
     mutate(rank_dp = rank(-u_index, ties.method = "first", na.last = "keep"))%>%
     select(slug_game, iso_a3, u_index, rank_dp)
   
